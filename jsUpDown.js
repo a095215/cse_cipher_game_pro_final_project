@@ -2,6 +2,7 @@ const token = localStorage.getItem("token");
     let username = "";
 
     async function upload() {
+      console.log("upload() 被調用");
       const file = document.getElementById("fileInput").files[0];
       const buf = await file.arrayBuffer();
       const iv = window.crypto.getRandomValues(new Uint8Array(12));
@@ -11,7 +12,10 @@ const token = localStorage.getItem("token");
       const rawKey = await crypto.subtle.exportKey("raw", aesKey);
       const keyRes = await fetch("public.pem");
       const pem = await keyRes.text();
-      const pemBody = pem.replace(/-----.*-----/g, '').replace(/\n/g, '');
+      const pemBody = pem
+    .replace(/-----BEGIN PUBLIC KEY-----/, "")
+    .replace(/-----END PUBLIC KEY-----/, "")
+    .replace(/\s+/g, "");
       const binaryDer = Uint8Array.from(atob(pemBody), c => c.charCodeAt(0));
       const rsaKey = await crypto.subtle.importKey(
         "spki", binaryDer.buffer, { name: "RSA-OAEP", hash: "SHA-256" }, false, ["encrypt"]

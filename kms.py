@@ -17,13 +17,6 @@ users = {
     }
 }
 
-# 將 alice 的公開金鑰儲存為 public.pem
-with open("public.pem", "wb") as f:
-    f.write(users["alice"]["private_key"].public_key().public_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PublicFormat.SubjectPublicKeyInfo
-    ))
-
 @app.route("/auth", methods=["POST"])
 def auth():
     data = request.json
@@ -46,12 +39,15 @@ def auth():
 
     # 驗證成功後清除 OTP 並發 token
     user["otp"] = None
+    # 從 kms_keys/alice.key 載入私鑰（對應 certs/alice.crt）
+    with open("kms_keys/alice.key","rb") as f:
+       alice_priv = serialization.load_pem_private_key(f.read(), password=None)
     token = jwt.encode({
         "sub": username,
         "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=30),
         "iss": "kms.local",
         "aud": "data_server"
-    }, users[username]["private_key"], algorithm="RS256")
+    }, alice_priv, algorithm="RS256")
     return jsonify({"status": "success", "token": token})
 
 @app.route("/decrypt_key", methods=["POST"])
@@ -59,11 +55,14 @@ def decrypt_key():
     data = request.json
     username = data.get("username")
     enc_key_b64 = data.get("encryptedAESKey")
-    user = users.get(username)
-    if not user:
-        return jsonify({"status": "fail", "message": "未知使用者"}), 401
+    key_path = f"kms_keys/{username}.key"
     try:
-        decrypted = user["private_key"].decrypt(
+       with open(key_path, "rb") as f:
+           priv = serialization.load_pem_private_key(f.read(), password=None)
+    except FileNotFoundError:
+         return jsonify({"status": "fail", "message": "未知使用者或私鑰不存在"}), 401
+    try:
+        decrypted = priv.decrypt(
             base64.b64decode(enc_key_b64),
             padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
         )

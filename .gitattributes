@@ -1,4 +1,6 @@
 # 強制所有 .pem 檔案使用 LF（Unix 格式），防止 CRLF 汙染金鑰格式
+*.crt text eol=lf
+*.key text eol=lf
 *.pem text eol=lf
 
 # 一般程式碼照作系統設定（可選）
