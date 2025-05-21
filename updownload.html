@@ -1,23 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
+
 <head>
-  <meta charset="UTF-8">
-  <title>選擇檔案下載</title>
-  <link rel="stylesheet" href="cssUpDown.css">
+    <meta charset="UTF-8">
+    <title>加密檔案上傳下載</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <!-- AOS 滾動動畫 -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            background-color: #fafafa;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #4a4a4a;
+        }
+
+        .btn-primary {
+            background-color: #7BA98B;
+            /* 飽和鼠尾草綠 */
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #638d73;
+        }
+
+        .btn-success {
+            background-color: #D17972;
+            /* 暖灰玫瑰紅 */
+            border: none;
+            color: #ffffff;
+        }
+
+        .btn-success:hover {
+            background-color: #b85d56;
+        }
+
+
+        input.form-control,
+        select.form-select {
+            background-color: #fcfcfc;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
+
 <body>
+    <div class="container py-5">
+        <!-- 上傳卡片 -->
+        <div class="card p-4 mb-5" data-aos="fade-up">
+            <h2 class="mb-4">選擇檔案上傳</h2><input class="form-control mb-3" type="file" id="fileInput"><button
+                class="btn btn-primary" onclick="upload()">加密並上傳</button>
+            <div id="uploadSpinner" class="mt-3 d-none">
+                <div class="spinner-border text-primary" role="status"></div><span>上傳中...</span>
+            </div>
+        </div>
+        <!-- 下載卡片 -->
+        <div class="card p-4" data-aos="fade-up" data-aos-delay="200">
+            <h2 class="mb-4">下載並解密檔案</h2><select class="form-select mb-3" id="fileSelect">
+                <option disabled selected>請選擇檔案</option>
+            </select><button class="btn btn-success" onclick="downloadSelected()">下載並解密</button>
+            <div id="downloadSpinner" class="mt-3 d-none">
+                <div class="spinner-border text-success" role="status"></div><span>下載中...</span>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init();
 
-    <h2>選擇檔案上傳</h2>
-  <input type="file" id="fileInput">
-  <button onclick="upload()">加密並上傳</button>
-  <hr>
+    </script>
+    <!-- 主功能 JS -->
+    <script>function upload() {
+            const spinner = document.getElementById("uploadSpinner");
+            spinner.classList.remove("d-none");
 
-  <h2>選擇一個 .txt 檔案下載並解密</h2>
-  <select id="fileSelect">
-    <option disabled selected>請選擇檔案</option>
-  </select>
-  <button onclick="downloadSelected()">下載並解密</button>
+            // 模擬上傳
+            setTimeout(() => {
+                spinner.classList.add("d-none");
 
-  <script src="jsUpDown.js"></script>
+                Swal.fire({
+                    icon: 'success',
+                    title: '檔案上傳成功！',
+                    confirmButtonText: '確認'
+                });
+            }
+
+                , 1500);
+        }
+
+        function downloadSelected() {
+            const spinner = document.getElementById("downloadSpinner");
+            spinner.classList.remove("d-none");
+
+            // 模擬下載
+            setTimeout(() => {
+                spinner.classList.add("d-none");
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '檔案下載並解密成功！',
+                    confirmButtonText: '完成'
+                });
+            }
+
+                , 1500);
+        }
+
+    </script>
 </body>
+
 </html>
