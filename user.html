@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Cipher Game Plus</title>
+</head>
+<body>
+  <style>
+     .b {
+      height: 300px;
+      margin: 0;
+      margin-top: 300px;
+      height: 100%;
+      display: flex;
+      justify-content: center; 
+      align-items: center;     
+      font-family: Arial, sans-serif;     
+    }
+    .box {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 400px;
+    }
+    .middle {
+      align-items: center;  
+    }
+  </style>
+
+
+  <div class="b">
+    <div class="box">
+      <h2 class="middle">登入</h2>
+      <input id="username" placeholder="Username">
+      <input id="password" placeholder="Password">
+      <input id="otp" placeholder="OTP">
+      <button onclick="login()">登入</button>
+    </div>
+  </div>
+  
+  
+
+  <script>
+    let token = null;
+    let username = "";
+
+    async function login() {
+      username = document.getElementById("username").value;
+      const res = await fetch("http://localhost:5000/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: username,
+          password: document.getElementById("password").value,
+          otp: document.getElementById("otp").value
+        })
+      });
+      const json = await res.json();
+      if (json.status === "need_otp") {
+        alert("請查看 Terminal 顯示的 OTP 並輸入！");
+        return;
+      }
+      if (json.status !== "success") {
+        alert("登入失敗: " + json.message);
+        return;
+      }
+      token = json.token;
+      localStorage.setItem("token", token);
+      localStorage.setItem("username", username);
+      alert("登入成功！");
+      document.getElementById("password").value = "";
+      document.getElementById("otp").value = "";
+      window.location.href = "updownload.html";
+    }
+  </script>
+</body>
+</html>
