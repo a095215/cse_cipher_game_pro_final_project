@@ -93,44 +93,7 @@
     <script>AOS.init();
 
     </script>
-    <!-- 主功能 JS -->
-    <script>function upload() {
-            const spinner = document.getElementById("uploadSpinner");
-            spinner.classList.remove("d-none");
-
-            // 模擬上傳
-            setTimeout(() => {
-                spinner.classList.add("d-none");
-
-                Swal.fire({
-                    icon: 'success',
-                    title: '檔案上傳成功！',
-                    confirmButtonText: '確認'
-                });
-            }
-
-                , 1500);
-        }
-
-        function downloadSelected() {
-            const spinner = document.getElementById("downloadSpinner");
-            spinner.classList.remove("d-none");
-
-            // 模擬下載
-            setTimeout(() => {
-                spinner.classList.add("d-none");
-
-                Swal.fire({
-                    icon: 'success',
-                    title: '檔案下載並解密成功！',
-                    confirmButtonText: '完成'
-                });
-            }
-
-                , 1500);
-        }
-
-    </script>
+    <script src="jsUpDown.js"></script>
 </body>
 
 </html>
