@@ -13,8 +13,9 @@ How to run this code?
 dataserver.py 驗證 JWT 時使用的是憑證中的公鑰
 
 流程圖和架構圖:
+
 ![alt text](img/image.png)
 ![alt text](img/image-0.png)
 ![alt text](img/image-1.png)
 ![alt text](img/image-2.png)
-
+![alt text](img/image-3.png)
