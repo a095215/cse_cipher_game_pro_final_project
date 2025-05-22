@@ -2,6 +2,7 @@ const token = localStorage.getItem("token");
 let username = "";
 
 
+
 async function upload() {
   if (!token) {
     Swal.fire({
@@ -17,17 +18,21 @@ async function upload() {
   const aesKey = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, true, ["encrypt"]);
   const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, aesKey, buf);
 
-  const rawKey = await crypto.subtle.exportKey("raw", aesKey);
-  const keyRes = await fetch("public.pem");
-  const pem = await keyRes.text();
-  const pemBody = pem.replace(/-----.*-----/g, '').replace(/\n/g, '');
-  const binaryDer = Uint8Array.from(atob(pemBody), c => c.charCodeAt(0));
-  const rsaKey = await crypto.subtle.importKey(
-    "spki", binaryDer.buffer, { name: "RSA-OAEP", hash: "SHA-256" }, false, ["encrypt"]
-  );
-  const encryptedAESKey = await crypto.subtle.encrypt(
-    { name: "RSA-OAEP" }, rsaKey, rawKey
-  );
+      const rawKey = await crypto.subtle.exportKey("raw", aesKey);
+      const keyRes = await fetch("public.pem");
+      const pem = await keyRes.text();
+      const pemBody = pem
+    .replace(/-----BEGIN PUBLIC KEY-----/, "")
+    .replace(/-----END PUBLIC KEY-----/, "")
+    .replace(/\s+/g, "");
+      const binaryDer = Uint8Array.from(atob(pemBody), c => c.charCodeAt(0));
+      const rsaKey = await crypto.subtle.importKey(
+        "spki", binaryDer.buffer, { name: "RSA-OAEP", hash: "SHA-256" }, false, ["encrypt"]
+      );
+      const encryptedAESKey = await crypto.subtle.encrypt(
+        { name: "RSA-OAEP" }, rsaKey, rawKey
+      );
+
 
   await fetch("http://localhost:5001/upload", {
     method: "POST",
