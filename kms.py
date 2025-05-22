@@ -3,6 +3,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 import jwt, base64, datetime
 from flask_cors import CORS
+from cryptography.x509 import CertificateSigningRequestBuilder
 import random
 
 app = Flask(__name__)
@@ -16,6 +17,7 @@ users = {
         "private_key": rsa.generate_private_key(public_exponent=65537, key_size=2048)
     }
 }
+
 
 @app.route("/auth", methods=["POST"])
 def auth():

@@ -3,6 +3,8 @@
 How to run this code?
 # 建立 ca.key + ca.crt
 `python ca_tools.py init_ca`
+# 生成私鑰
+`python ca_tools.py gen_user alice`
 # 為 alice 建立 alice.key + alice.crt
 `python ca_tools.py sign alice`
 # 生成 public.pem ( 從使用者憑證對應的私鑰中匯出公鑰 )

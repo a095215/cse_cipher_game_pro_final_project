@@ -2,7 +2,7 @@
 *.crt text eol=lf
 *.key text eol=lf
 *.pem text eol=lf
-
+*.csr text eol=lf
 # 一般程式碼照作系統設定（可選）
 *.py text
 *.html text
